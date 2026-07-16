@@ -17,18 +17,20 @@
 一鍵安裝核心＋官方兩包（umbrella chart，含自動登記）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/sol-cepheus --version 0.1.0
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.0
 ```
 
-或核心與各領域包分開安裝（各自獨立 release、可單獨升級）：
+或核心與各領域包分開安裝（各自獨立 release、可單獨升級；示範包 logistics 亦同規）：
 
 ```bash
-helm install cepheus-core oci://ghcr.io/twstellerwhale-ocean2/sys-cepheus --version 0.15.3
-helm install pack-cyber   oci://ghcr.io/twstellerwhale-ocean2/pack-cyber --version 0.1.0
-helm install pack-strategy oci://ghcr.io/twstellerwhale-ocean2/pack-strategy --version 0.1.0
+helm install cepheus-core oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart --version 0.16.2
+helm install pack-cyber   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackcyber-chart --version 0.1.0
+helm install pack-strategy oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackstrategy-chart --version 0.1.0
 ```
 
-Container images：`ghcr.io/twstellerwhale-ocean2/solcepheus-modcore:0.15.3`、`…/solcepheus-modweb:0.15.3`、`…/solcepheus-pack-{cyber,strategy,logistics}:0.1.0`。
+Container images：`ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-modcore:0.16.2`、`…/solcepheus-syscepheus-modweb:0.16.2`、`…/solcepheus-syspack{cyber,strategy,logistics}:0.1.0`。
+
+> **v0.16.2 起發行名嚴格歸層**（結構詞彙 sol/sys/mod）：舊名 `sol-cepheus`／`sys-cepheus`／`pack-*`／`solcepheus-mod*`／`solcepheus-pack-*` 保留於 GHCR 但**不再更新**；umbrella values 鍵＝子 chart 名（舊 `--set sys-cepheus.*` 改 `--set solcepheus-syscepheus-chart.*`）。既有安裝以新 chart `helm upgrade` 可續、k8s Service 名不變。
 
 亦可自 [Releases](../../releases) 下載 chart `.tgz` 離線安裝（資產附 SHA256 供驗證）。
 
@@ -52,6 +54,7 @@ chart 預設附 **opt-in Ingress**（`ingress.enabled: true`），把外部 `hos
 
 | 版本 | 日期 | 摘要 |
 |---|---|---|
+| v0.16.2 | 2026-07-16 | 發行名嚴格歸層（sol/sys/mod；chart／image 全面遷新名，舊名保留不再更新）＋發車安檢修復（modWeb 收 curl CVE-2026-5773/6276 修復版，Trivy High/Critical 歸零） |
 | v0.15.3 | 2026-07-16 | modWeb 補 opt-in Ingress 對外可達（#80）＋ className 預設留空、k3s／ingress-nginx 皆免 `--set`；併含自 GHCR 開箱安裝修復（chart image 補 GHCR 前綴，#74） |
 | v0.14.1 | 2026-07-10 | 管理基元＋領域包全外掛新體系首班車（0.9.0–0.14.1 共 10 增量；含 runtime image 安檢強化） |
 | v0.8.0 | 2026-07-02 | 首發：通用 OODA 指管平台（遞迴管理單位，一核＋三域） |
