@@ -23,14 +23,25 @@ helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/sol-cepheus --version 0
 或核心與各領域包分開安裝（各自獨立 release、可單獨升級）：
 
 ```bash
-helm install cepheus-core oci://ghcr.io/twstellerwhale-ocean2/sys-cepheus --version 0.14.1
+helm install cepheus-core oci://ghcr.io/twstellerwhale-ocean2/sys-cepheus --version 0.15.3
 helm install pack-cyber   oci://ghcr.io/twstellerwhale-ocean2/pack-cyber --version 0.1.0
 helm install pack-strategy oci://ghcr.io/twstellerwhale-ocean2/pack-strategy --version 0.1.0
 ```
 
-Container images：`ghcr.io/twstellerwhale-ocean2/solcepheus-modcore:0.14.1`、`…/solcepheus-modweb:0.14.1`、`…/solcepheus-pack-{cyber,strategy,logistics}:0.1.0`。
+Container images：`ghcr.io/twstellerwhale-ocean2/solcepheus-modcore:0.15.3`、`…/solcepheus-modweb:0.15.3`、`…/solcepheus-pack-{cyber,strategy,logistics}:0.1.0`。
 
-亦可自 [Releases](../../releases) 下載 chart `.tgz` 與裸網站包離線安裝（資產附 SHA256 供驗證）。
+亦可自 [Releases](../../releases) 下載 chart `.tgz` 離線安裝（資產附 SHA256 供驗證）。
+
+### 對外可達（Ingress）
+
+chart 預設附 **opt-in Ingress**（`ingress.enabled: true`），把外部 `host → modweb:80`；app 內部路由（`/api`、`/packs/{slug}`、SPA）仍由 modWeb 自理。
+
+- **host**：預設 `cepheus.twstellerwhale.duckdns.org`，請覆寫為你的真實對外 host——`--set ingress.host=cepheus.<你的網域>`（`baseDomain` 為你叢集一處設定的共用網域值，不硬編他人網域）。
+- **controller（`className`）**：預設**留空**＝自動採用叢集的預設 ingress controller（k3s→traefik、ingress-nginx→nginx，**皆免 `--set`**）；同叢集有多個 controller 才 `--set ingress.className=nginx`／`traefik`。
+- **邊緣須先備妥**（chart 不含邊緣本體，二擇一）：① 外部邊緣終結 TLS（如 Cloudflare Tunnel）→ 維持預設 `ingress.tls=false`；② 自架 ingress-nginx＋cert-manager → `--set ingress.issuer=<ClusterIssuer>`（chart 自動加 annotation 並產 TLS）。
+- **純內網／`kubectl port-forward`**：`--set ingress.enabled=false` 回退 ClusterIP-only。
+
+部署參數與疑難排解見隨附使用手冊。
 
 ## 使用手冊
 
@@ -41,6 +52,7 @@ Container images：`ghcr.io/twstellerwhale-ocean2/solcepheus-modcore:0.14.1`、`
 
 | 版本 | 日期 | 摘要 |
 |---|---|---|
+| v0.15.3 | 2026-07-16 | modWeb 補 opt-in Ingress 對外可達（#80）＋ className 預設留空、k3s／ingress-nginx 皆免 `--set`；併含自 GHCR 開箱安裝修復（chart image 補 GHCR 前綴，#74） |
 | v0.14.1 | 2026-07-10 | 管理基元＋領域包全外掛新體系首班車（0.9.0–0.14.1 共 10 增量；含 runtime image 安檢強化） |
 | v0.8.0 | 2026-07-02 | 首發：通用 OODA 指管平台（遞迴管理單位，一核＋三域） |
 
