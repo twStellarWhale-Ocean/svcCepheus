@@ -29,7 +29,7 @@ solCepheus 讓一個跨層級、跨專業領域的指揮管理組織，在**同�
 | **戰略指揮官／戰略參謀** | 在戰略操作台匯整下級回報與外部事件、研判跨域態勢、訂整體目標、核定跨域方案、下達子目標並追蹤重評 |
 | **資安指揮官／資安分析員** | 在資安操作台掌握多個關鍵基礎設施的 NIST CSF 態勢、訂各設施資安目標、核定並調度下屬小組、彙整回報上送 |
 | **維運工程師／維運組長** | 在維運台部署系統、開帳號與授權隔離、拖拉編組管理單位拓樸、載入與套用領域包、設定電視牆、監控健康 |
-| **指揮中心（電視牆）** | 情態牆全螢幕投影即時共同作戰圖（COP），斷線自動重連 |
+| **指揮中心（電視牆）** | 情態牆全螢幕投影即時共同作戰圖（COP）——下級回報上送後**數秒內**自動反映（WebSocket 推播；斷線自動退回輪詢並重連） |
 | **展示對象／受訓學員** | 用維運發的演習帳號登入，從說明中心啟動展示導覽——依職責層層展開（職責→作業→操作）點哪導哪、可自動播放，在預鋪模擬情境的真實介面上體驗 |
 
 ## 安裝（Kubernetes／Helm）
@@ -90,7 +90,8 @@ if ($LASTEXITCODE -ne 0 -or -not $raw) {
 一鍵聚合安裝（核心＋官方兩包，安裝程序自動完成包登記；chart 直接從 GHCR 取得，不需下載原始碼）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart \
+  --set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域   # 對外網址＝solcepheus.你的網域；純內網/port-forward 可省略（詳下方 Ingress 段）
 ```
 
 或核心（零領域包）與各領域包分開安裝——各包自帶 image／chart、可單獨升級替換：
@@ -108,29 +109,29 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 
 > **對外可達（Ingress）**：chart 預設附 opt-in Ingress（`ingress.enabled: true`），將外部 `host → modweb:80`；app 內部 path 路由（`/api`、`/packs/{slug}`、SPA）仍由 modWeb nginx 處理。
 >
-> - **host**：預設 `cepheus.twstellerwhale.duckdns.org`——請覆寫為你的真實對外 host `cepheus.<baseDomain>`（`--set ingress.host=cepheus.你的網域`；`baseDomain` 為你叢集/umbrella 一處設定之共用網域值，不硬編他人網域）。
+> - **host**：預設由 `solcepheus.<baseDomain>` 鏈導出（`baseDomain` 預設中性值 `local`，chart 不硬編任何公開網域）——請以 `--set ingress.baseDomain=你的網域` 一處設定共用網域值，即得對外 host `solcepheus.你的網域`；host 要完全自訂時改 `--set ingress.host=你要的host`（優先於預設鏈）。**用 umbrella 一鍵安裝時鍵名須帶子 chart 前綴**（`--set solcepheus-syscepheus-chart.ingress.baseDomain=…`，見下）。
 > - **controller（`className`）**：預設**留空** → 交給叢集的**預設 IngressClass**（前提是叢集有標預設——k3s traefik 出廠即標、免 `--set`；ingress-nginx 官方安裝**不標**，須 `--set ingress.className=nginx`）；同叢集多 controller 也須明示。**裝前請先跑上方「安裝前環境檢查」腳本**，依輸出決定要不要帶 `--set`。
 > - **邊緣須先備妥**（chart **不含**邊緣本體，二擇一）：① **外部邊緣終結 TLS**（如 Cloudflare Tunnel：萬用 `*.<baseDomain>` 設定一次、之後掛 app 不再碰邊緣）→ 維持預設 `ingress.tls=false`、`ingress.issuer=""`（TLS 在邊緣）；② **自架 ingress-nginx＋cert-manager** → `--set ingress.issuer=<ClusterIssuer>`（chart 自動加 `cert-manager.io/cluster-issuer` annotation 並產 TLS，例 DuckDNS ACME issuer）。
 > - **純內網／`kubectl port-forward`**：`--set ingress.enabled=false` 回退 ClusterIP-only、不產生 Ingress 物件。
-> - umbrella 於 `solcepheus-syscepheus-chart.ingress` 透傳同組值（如 `--set solcepheus-syscepheus-chart.ingress.host=cepheus.你的網域`）。
+> - umbrella 於 `solcepheus-syscepheus-chart.ingress` 透傳同組值（如 `--set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域`）。
 
-> 逐步安裝、參數與疑難排解，見完整使用手冊「快速入門」與「功能與操作說明」；歷次版本的升級注意事項（含改名遷移）見各版 [Release notes](../../releases)。
+> 逐步安裝、參數與疑難排解，見完整使用手冊「快速入門」與「功能與操作說明」；歷次版本的升級注意事項（含改名遷移）見 [`CHANGELOG.md`](CHANGELOG.md) 與各版 Release notes。
 
 > 登入逾時（token 失效、伺服器重啟等）時系統會自動登出並導回登入頁、提示「登入逾時，請重新登入」；權限不足（403）不會登出、在原頁就地提示。
 
 ## 走一圈看看（使用者旅程）
 
-以維運 → 資安 → 戰略 → 電視牆的順序，把平台跑一輪：
+以維運 → 資安 → 戰略 → 電視牆的順序，把平台跑一輪（本版各態勢研判以內建示範資料演算；接入真實情資源屬後續增量）：
 
 **1. 維運台——把組織搭起來。** 在通用單元編組頁用拖拉方式編組管理單位拓樸（層級由拓樸自動推導），在領域包素材頁掃描探索叢集內的領域包、確認登記，再套用到指定單位：
 
 ![通用單元編組頁](docs/manual-assets/wi-3-7-1.png)
 
-**2. 資安操作台——跑一輪六步驟。** 資安單位從情資蒐集開始，在資安態勢頁看多個關鍵基礎設施的 NIST CSF 燈號與瓶頸，接著訂目標、擬方案、核定調度小組、彙整回報上送：
+**2. 資安操作台——跑一輪六步驟。** 資安單位從情資蒐集開始，在資安態勢頁的台灣地圖 COP 上看多個關鍵基礎設施的位置、NIST CSF 燈號與瓶頸（點選任一設施看五功能細況），接著訂目標、擬方案、核定調度小組、彙整回報上送：
 
 ![資安態勢頁](docs/manual-assets/wi-2-2-1.png)
 
-**3. 戰略操作台——跨域統管。** 戰略單位匯整下級回報與外部事件，以關鍵基礎設施的功能（Function）為整合基準重新研判跨域連鎖（不是把下級分數拿來平均），訂整體目標、下達子目標：
+**3. 戰略操作台——跨域統管。** 戰略單位匯整下級回報與外部事件，在戰略態勢頁的跨域 COP（台灣地圖上的實體分布＋Function×實體連鎖圖）以關鍵基礎設施的功能（Function）為整合基準重新研判跨域連鎖（不是把下級分數拿來平均），訂整體目標、下達子目標：
 
 ![戰略態勢頁](docs/manual-assets/wi-1-2-1.png)
 
@@ -183,7 +184,6 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 
 ## 部署與文件
 
-- 本 repo 為 solCepheus 產品門面（source-free）；原始碼存於私有開發 repo。
 - 部署：核心為單一 Helm release（`sysCepheus/deploy`，零領域包）；所有領域包各自 image／chart 獨立 `helm install`（官方包與第三方同級），維運台可掃描探索並確認掛載；umbrella chart 提供核心＋官方包一鍵安裝。
 - 機密：`secrets.jwtSecret`、`secrets.dbPassword` 於部署時設定。
-- 版本與改版紀錄：見 [Releases](../../releases)（各版 notes 與資產）。
+- 版本與改版紀錄：[`VERSION`](VERSION)／[`CHANGELOG.md`](CHANGELOG.md)；手冊附錄同步引用。
