@@ -28,7 +28,7 @@ solCepheus 讓一個跨層級、跨專業領域的指揮管理組織，在**同�
 |---|---|
 | **戰略指揮官／戰略參謀** | 在戰略操作台匯整下級回報與外部事件、研判跨域態勢、訂整體目標、核定跨域方案、下達子目標並追蹤重評 |
 | **資安指揮官／資安分析員** | 在資安操作台掌握多個關鍵基礎設施的 NIST CSF 態勢、訂各設施資安目標、核定並調度下屬小組、彙整回報上送 |
-| **維運工程師／維運組長** | 在維運台部署系統、開帳號與授權隔離、拖拉編組管理單位拓樸、載入與套用領域包、設定電視牆、監控健康 |
+| **維運工程師／維運組長** | 在維運台部署系統、開帳號與授權隔離、拖拉編組管理單位拓樸、載入與套用領域包、設定電視牆、監控健康；並以**超級使用者**身分開啟任一領域操作台（所見與指揮官一致），支援排障與展示講解——維運帳號具名不共用、寫入操作全程留稽核 |
 | **指揮中心（電視牆）** | 情態牆全螢幕投影即時共同作戰圖（COP）——下級回報上送後**數秒內**自動反映（WebSocket 推播；斷線自動退回輪詢並重連） |
 | **展示對象／受訓學員** | 用維運發的演習帳號登入，從說明中心啟動展示導覽——依職責層層展開（職責→作業→操作）點哪導哪、可自動播放，在預鋪模擬情境的真實介面上體驗 |
 
@@ -108,14 +108,14 @@ if (-not $dns) {
 一鍵聚合安裝（核心＋官方兩包，安裝程序自動完成包登記；chart 直接從 GHCR 取得，不需下載原始碼）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.6 \
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.9 \
   --set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域   # 對外網址＝solcepheus.你的網域；純內網/port-forward 可省略（詳下方 Ingress 段）
 ```
 
 或核心（零領域包）與各領域包分開安裝——各包自帶 image／chart、可單獨升級替換：
 
 ```bash
-helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart   --version 0.23.0
+helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart   --version 0.25.1
 helm install pack-cyber     oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackcyber-chart  --version 0.2.1
 helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackstrategy-chart --version 0.2.1
 ```
@@ -124,12 +124,12 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 >
 > | 安裝物 | chart | chart version | 內含平台版（appVersion） |
 > |---|---|---|---|
-> | 一鍵 umbrella | `solcepheus-chart` | 0.1.6 | 0.23.0 |
-> | 核心（零領域包） | `solcepheus-syscepheus-chart` | 0.23.0 | 0.23.0 |
+> | 一鍵 umbrella | `solcepheus-chart` | 0.1.9 | 0.25.1 |
+> | 核心（零領域包） | `solcepheus-syscepheus-chart` | 0.25.1 | 0.25.1 |
 > | 資安領域包 | `solcepheus-syspackcyber-chart` | 0.2.1 | 0.2.1 |
 > | 戰略綜管領域包 | `solcepheus-syspackstrategy-chart` | 0.2.1 | 0.2.1 |
 >
-> 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases) 說明。
+> 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twStellerWhale-Ocean2/svcCepheus/releases) 說明。
 
 裝好後確認：modCore `/healthz` 回 200、modWeb 首頁可載入、素材頁可見兩官方包「可達／**已登記未套用**」；有啟用 Ingress 者另跑 `kubectl get ingress modweb` 確認 `CLASS` 欄**不是** `<none>`（`<none>`＝孤兒 Ingress、對外網址會無聲 404，請回頭跑上方環境檢查）。
 
@@ -146,6 +146,23 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 > - **純內網／`kubectl port-forward`**：`--set ingress.enabled=false` 回退 ClusterIP-only、不產生 Ingress 物件。
 > - umbrella 於 `solcepheus-syscepheus-chart.ingress` 透傳同組值（如 `--set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域`）。
 
+### 升級既有部署
+
+已裝過本平台（如既有 `cepheus` release）要升到本版時，用 `helm upgrade`——同名 release 再跑 `helm install` 會直接報錯：
+
+```bash
+helm upgrade cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.9 \
+  --set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域   # 安裝時帶過的 --set 請全數重帶（查法見下）
+```
+
+> **升級注意**：
+>
+> - **安裝時帶過的 `--set` 請全數重帶**：升級指令一旦帶了任何 `--set`／`-f`，未重帶的值就會回落 chart 預設（勿用 `--reuse-values`）。不記得當初帶了哪些？`helm get values cepheus` 會列出全部自訂值；`helm list` 可查現行版本（判斷是否落在下一條的版界內）。
+> - 自 **v0.22.0（含）以前**升級、且金鑰原用預設值（未曾自管 `secrets.jwtSecret`）者：JWT 簽章金鑰會自動輪替為強隨機值（安全整治），**既有登入 session 全數失效、需重新登入**，屬預期行為非故障；已自管強金鑰者不受影響。
+> - 其餘各版升級注意（含改名遷移）見裝後 NOTES「升級注意」段、[`CHANGELOG.md`](CHANGELOG.md) 與各版 Release notes。
+
+分開安裝者同理：對 `cepheus-core`／`pack-cyber`／`pack-strategy` 各自 `helm upgrade` 至上方版號對照表之 chart version。
+
 > 逐步安裝、參數與疑難排解，見完整使用手冊「快速入門」與「功能與操作說明」；歷次版本的升級注意事項（含改名遷移）見 [`CHANGELOG.md`](CHANGELOG.md) 與各版 Release notes。
 
 > 登入逾時（token 失效、伺服器重啟等）時系統會自動登出並導回登入頁、提示「登入逾時，請重新登入」；權限不足（403）不會登出、在原頁就地提示。
@@ -157,6 +174,10 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 **1. 維運台——把組織搭起來。** 在通用單元編組頁用拖拉方式編組管理單位拓樸（層級由拓樸自動推導），在領域包素材頁掃描探索叢集內的領域包、確認登記，再套用到指定單位：
 
 ![通用單元編組頁](docs/manual-assets/wi-3-7-1.png)
+
+維運帳號同時是**超級使用者**：左側導覽看得到全部領域操作台，開任一域頁所見與該域指揮官一致（下圖為維運視角的資安態勢頁）——用於掌握全系統實況、重現使用者回報的介面問題；維運帳號具名不共用、操作全程留稽核：
+
+![維運超級使用者視角的資安態勢頁](docs/manual-assets/page-adm-domain-view.png)
 
 **2. 資安操作台——跑一輪六步驟。** 資安單位從情資蒐集開始，在資安態勢頁的台灣地圖 COP 上看多個關鍵基礎設施的位置、NIST CSF 燈號與瓶頸（點選任一設施看五功能細況），接著訂目標、擬方案、核定調度小組、彙整回報上送：
 
@@ -212,10 +233,9 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 
 各項效益的量測方式與驗收證據，見完整使用手冊附錄。
 
-
 ## 部署與文件
 
 - 部署：核心為單一 Helm release（`sysCepheus/deploy`，零領域包）；所有領域包各自 image／chart 獨立 `helm install`（官方包與第三方同級），維運台可掃描探索並確認掛載；umbrella chart 提供核心＋官方包一鍵安裝。
 - 機密：`secrets.jwtSecret`、`secrets.dbPassword` 於部署時設定；`secrets.adminPassword`（正式初始管理帳號）留空＝安裝時自動隨機生成、取回方式見裝後 NOTES。
 - 正式（pg）部署**預設不內建示範帳號與示範編組**——上述示範帳號僅本機開發模式；首裝以初始管理帳號登入後自行編組。umbrella 之包自動登記走專用機器帳號（隨機密碼存 Secret，不落 values 明文；GitOps／CD 環境請以 `registrar.existingSecret` 引用既有 Secret，並同步設 `solcepheus-syscepheus-chart.modCore.registrarSecret=<同名>`）。自 v0.19.1 含以前版本升級者：資料庫內既有 `demo1234` 示範帳號請登入後逐一改密（系統開機偵測到會於日誌與稽核告警；帳號停用功能列後續版本）。
-- 版本與改版紀錄：完整改版說明見各版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases)；手冊附錄同步引用。
+- 版本與改版紀錄：[`CHANGELOG.md`](CHANGELOG.md)；完整改版說明見各版 [GitHub Release](https://github.com/twStellerWhale-Ocean2/svcCepheus/releases)；手冊附錄同步引用。
