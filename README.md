@@ -185,5 +185,6 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 ## 部署與文件
 
 - 部署：核心為單一 Helm release（`sysCepheus/deploy`，零領域包）；所有領域包各自 image／chart 獨立 `helm install`（官方包與第三方同級），維運台可掃描探索並確認掛載；umbrella chart 提供核心＋官方包一鍵安裝。
-- 機密：`secrets.jwtSecret`、`secrets.dbPassword` 於部署時設定。
-- 版本與改版紀錄：[`VERSION`](VERSION)／[`CHANGELOG.md`](CHANGELOG.md)；手冊附錄同步引用。
+- 機密：`secrets.jwtSecret`、`secrets.dbPassword` 於部署時設定；`secrets.adminPassword`（正式初始管理帳號）留空＝安裝時自動隨機生成、取回方式見裝後 NOTES。
+- 正式（pg）部署**預設不內建示範帳號與示範編組**——上述示範帳號僅本機開發模式；首裝以初始管理帳號登入後自行編組。umbrella 之包自動登記走專用機器帳號（隨機密碼存 Secret，不落 values 明文；GitOps／CD 環境請以 `registrar.existingSecret` 引用既有 Secret，並同步設 `solcepheus-syscepheus-chart.modCore.registrarSecret=<同名>`）。自 v0.19.1 含以前版本升級者：資料庫內既有 `demo1234` 示範帳號請登入後逐一改密（系統開機偵測到會於日誌與稽核告警；帳號停用功能列後續版本）。
+- 版本與改版紀錄：完整改版說明見各版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases)；手冊附錄同步引用。
