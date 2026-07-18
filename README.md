@@ -108,14 +108,14 @@ if (-not $dns) {
 一鍵聚合安裝（核心＋官方兩包，安裝程序自動完成包登記；chart 直接從 GHCR 取得，不需下載原始碼）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.4 \
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.5 \
   --set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域   # 對外網址＝solcepheus.你的網域；純內網/port-forward 可省略（詳下方 Ingress 段）
 ```
 
 或核心（零領域包）與各領域包分開安裝——各包自帶 image／chart、可單獨升級替換：
 
 ```bash
-helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart   --version 0.22.0
+helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart   --version 0.22.1
 helm install pack-cyber     oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackcyber-chart  --version 0.2.0
 helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackstrategy-chart --version 0.2.0
 ```
@@ -124,8 +124,8 @@ helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 >
 > | 安裝物 | chart | chart version | 內含平台版（appVersion） |
 > |---|---|---|---|
-> | 一鍵 umbrella | `solcepheus-chart` | 0.1.4 | 0.22.0 |
-> | 核心（零領域包） | `solcepheus-syscepheus-chart` | 0.22.0 | 0.22.0 |
+> | 一鍵 umbrella | `solcepheus-chart` | 0.1.5 | 0.22.1 |
+> | 核心（零領域包） | `solcepheus-syscepheus-chart` | 0.22.1 | 0.22.1 |
 > | 資安領域包 | `solcepheus-syspackcyber-chart` | 0.2.0 | 0.2.0 |
 > | 戰略綜管領域包 | `solcepheus-syspackstrategy-chart` | 0.2.0 | 0.2.0 |
 >
