@@ -1,6 +1,6 @@
 # solCepheus — 可組合跨域指揮管理平台
 
-> 📘 **完整使用手冊**：[PDF 版（含完整目錄）](docs/solCepheus-manual.pdf) ｜ 站內版 `/manual/`（登入後自說明中心（右上角 `?`）開啟、直達當前頁說明）
+> 📘 **完整使用手冊**：[PDF 版（含完整目錄）](docs/manual/solCepheus-manual.pdf) ｜ 站內版 `/manual/`（登入後自說明中心（右上角 `?`）開啟、直達當前頁說明）
 > 手冊涵蓋部署、登入到每一步操作的逐項說明與畫面；本 README 為對應的入口簡介。
 
 ## 產品概述
@@ -36,7 +36,7 @@ solCepheus 讓一個跨層級、跨專業領域的指揮管理組織，在**同�
 
 系統以 Helm chart 部署到你的 Kubernetes 叢集：可用 umbrella chart 一鍵裝核心＋官方兩包，也可核心與各領域包分開裝。安裝分三步：跑環境檢查 → `helm install` → 裝後確認。
 
-**安裝前環境檢查（請先跑）**：chart 的 `ingress.className` 預設留空＝交給叢集的**預設 ingress controller**；這招只在叢集真的有標「預設 IngressClass」時有效（k3s 內建 traefik 出廠即標；ingress-nginx 官方安裝**不標**——留空會產生沒人認領的孤兒 Ingress、網址無聲 404）。安裝前請先跑下列檢查腳本（**整段複製執行**——分段貼上會沿用舊變數而誤判），依輸出指引安裝：
+**安裝前環境檢查（請先跑）**：檢查兩件事——（1）叢集**預設 IngressClass**：chart 的 `ingress.className` 預設留空＝交給預設 ingress controller，只在叢集真的有標「預設 IngressClass」時有效（k3s 內建 traefik 出廠即標；ingress-nginx 官方安裝**不標**——留空會產生沒人認領的孤兒 Ingress、網址無聲 404）；（2）**kube-dns（CoreDNS）ClusterIP**：modWeb 反代領域包 WUI 需正確的叢集 DNS resolver（chart 預設為 k3s 的 `10.43.0.10`，kubeadm／EKS／GKE 常為 `10.96.0.10`——不符時領域包 WUI 反代解析失敗、態勢頁掉通用畫面、症狀與「包壞了」難以區分）。安裝前請先跑下列檢查腳本（**整段複製執行**——分段貼上會沿用舊變數而誤判），依輸出指引安裝：
 
 腳本輸出的 `--set` 依你的安裝動線擇一：**umbrella 一鍵安裝**用 `solcepheus-syscepheus-chart.ingress.*` 開頭的鍵；**核心 chart 單獨安裝**用 `ingress.*` 開頭的鍵（鍵擺錯層值透不進去，等同沒設）。
 
@@ -59,6 +59,15 @@ else
     echo "[!] 叢集有 IngressClass 但未標預設：umbrella 安裝加 --set solcepheus-syscepheus-chart.ingress.className=<名>（核心 chart 單獨裝則 --set ingress.className=<名>）。可用名稱："
     echo "${CLASSES}" | sed 's|ingressclass.networking.k8s.io/||'
   fi
+fi
+# (2) kube-dns（CoreDNS）ClusterIP：modWeb 反代領域包所需之 resolver（chart 預設 k3s 之 10.43.0.10）
+DNS=$(kubectl get svc -n kube-system kube-dns -o jsonpath='{.spec.clusterIP}' 2>/dev/null)
+if [ -z "$DNS" ]; then
+  echo "[!] 查不到 kube-dns Service ClusterIP（叢集 DNS 可能改名）：請手動查你的 CoreDNS/kube-dns Service ClusterIP，若非 10.43.0.10 則安裝加 --set solcepheus-syscepheus-chart.modWeb.dnsResolver=<值>（核心 chart 單獨裝用 --set modWeb.dnsResolver=<值>）。"
+elif [ "$DNS" = "10.43.0.10" ]; then
+  echo "[OK] kube-dns ClusterIP=10.43.0.10 與 chart 預設相符：modWeb.dnsResolver 免設。"
+else
+  echo "[!] kube-dns ClusterIP=${DNS} 與 chart 預設 10.43.0.10 不同——不覆寫會使領域包 WUI 反代解析失敗、態勢頁掉通用畫面。安裝加 --set solcepheus-syscepheus-chart.modWeb.dnsResolver=${DNS}（核心 chart 單獨裝用 --set modWeb.dnsResolver=${DNS}）。"
 fi
 ```
 
@@ -83,6 +92,15 @@ if ($LASTEXITCODE -ne 0 -or -not $raw) {
     $items | ForEach-Object { Write-Host $_.metadata.name }
   }
 }
+# (2) kube-dns（CoreDNS）ClusterIP：modWeb 反代領域包所需之 resolver（chart 預設 k3s 之 10.43.0.10）
+$dns = kubectl get svc -n kube-system kube-dns -o jsonpath='{.spec.clusterIP}' 2>$null
+if (-not $dns) {
+  Write-Host "[!] 查不到 kube-dns Service ClusterIP（叢集 DNS 可能改名）：請手動查你的 CoreDNS/kube-dns Service ClusterIP，若非 10.43.0.10 則安裝加 --set solcepheus-syscepheus-chart.modWeb.dnsResolver=<值>（核心 chart 單獨裝用 --set modWeb.dnsResolver=<值>）。"
+} elseif ($dns -eq "10.43.0.10") {
+  Write-Host "[OK] kube-dns ClusterIP=10.43.0.10 與 chart 預設相符：modWeb.dnsResolver 免設。"
+} else {
+  Write-Host "[!] kube-dns ClusterIP=$dns 與 chart 預設 10.43.0.10 不同——不覆寫會使領域包 WUI 反代解析失敗、態勢頁掉通用畫面。安裝加 --set solcepheus-syscepheus-chart.modWeb.dnsResolver=$dns（核心 chart 單獨裝用 --set modWeb.dnsResolver=$dns）。"
+}
 ```
 
 > 註：預設 IngressClass 只在 Ingress 物件**建立當下**蓋章——若曾以 `--set ingress.className=<名>` 安裝、之後叢集補標了預設想改回留空，須讓 Ingress 物件重建才會被預設 controller 接手：先 `kubectl delete ingress modweb`、**再** `helm upgrade`（Helm 會重建缺失的 Ingress；controller 不會自行重建被刪的物件，順序顛倒會讓對外入口一直斷到下次 upgrade。注意 upgrade 時勿帶 `--reuse-values` 或舊的 `--set ingress.className`，否則留空不會生效）。
@@ -90,19 +108,32 @@ if ($LASTEXITCODE -ne 0 -or -not $raw) {
 一鍵聚合安裝（核心＋官方兩包，安裝程序自動完成包登記；chart 直接從 GHCR 取得，不需下載原始碼）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart \
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.4 \
   --set solcepheus-syscepheus-chart.ingress.baseDomain=你的網域   # 對外網址＝solcepheus.你的網域；純內網/port-forward 可省略（詳下方 Ingress 段）
 ```
 
 或核心（零領域包）與各領域包分開安裝——各包自帶 image／chart、可單獨升級替換：
 
 ```bash
-helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart
-helm install pack-cyber     oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackcyber-chart
-helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackstrategy-chart
+helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscepheus-chart   --version 0.22.0
+helm install pack-cyber     oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackcyber-chart  --version 0.2.0
+helm install pack-strategy  oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackstrategy-chart --version 0.2.0
 ```
 
-裝好後確認：modCore `/healthz` 回 200、modWeb 首頁可載入、素材頁可見兩官方包「可達／已套用」；有啟用 Ingress 者另跑 `kubectl get ingress modweb` 確認 `CLASS` 欄**不是** `<none>`（`<none>`＝孤兒 Ingress、對外網址會無聲 404，請回頭跑上方環境檢查）。
+> **釘版安裝（可重現）**：上列 `--set`／`--version` 皆已標本次發行版本。chart version 與內含平台版（appVersion）對照如下——umbrella 只需釘自身 `--version`，子 chart 版本由其相依鎖定：
+>
+> | 安裝物 | chart | chart version | 內含平台版（appVersion） |
+> |---|---|---|---|
+> | 一鍵 umbrella | `solcepheus-chart` | 0.1.4 | 0.22.0 |
+> | 核心（零領域包） | `solcepheus-syscepheus-chart` | 0.22.0 | 0.22.0 |
+> | 資安領域包 | `solcepheus-syspackcyber-chart` | 0.2.0 | 0.2.0 |
+> | 戰略綜管領域包 | `solcepheus-syspackstrategy-chart` | 0.2.0 | 0.2.0 |
+>
+> 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases) 說明。
+
+裝好後確認：modCore `/healthz` 回 200、modWeb 首頁可載入、素材頁可見兩官方包「可達／**已登記未套用**」；有啟用 Ingress 者另跑 `kubectl get ingress modweb` 確認 `CLASS` 欄**不是** `<none>`（`<none>`＝孤兒 Ingress、對外網址會無聲 404，請回頭跑上方環境檢查）。
+
+> **「已登記未套用」是新裝的正確狀態、不是故障**：安裝程序只做「登記」（讓平台知道有這兩個官方包），至於「把哪個包套用到哪個管理單位」是你的編組決策——請登入後於領域包素材頁自行套用（見下方〈走一圈看看〉步驟 1）。**尚未套用時，該領域的態勢頁會顯示通用畫面（無殼 fallback）＝正常降級、非故障**；套用領域包後才會換上該域自己的畫面（如資安態勢頁的台灣地圖 COP）。
 
 > **安裝需要網路**：chart 內的 image 指向 GHCR（`ghcr.io/twstellerwhale-ocean2/…`，public），叢集安裝時會直接自 GHCR 拉取。GitHub Release 附的 chart `.tgz`（含 SHA256）可先下載留存與驗證，但目前**不支援全離線安裝**——拉取 image 仍需對外網路；封閉網段部署請先把 image 匯入你的私有 registry，再以 `--set` 覆寫各 image 位址。
 >
