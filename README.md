@@ -112,23 +112,23 @@ if (-not $dns) {
 一鍵聚合安裝（核心＋官方通用指管包，安裝程序自動完成包登記；chart 直接從 GHCR 取得，不需下載原始碼）：
 
 ```bash
-helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.20 \
+helm install cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.21 \
   --set solcepheus-syscore-chart.ingress.baseDomain=你的網域   # 對外網址＝solcepheus.你的網域；純內網/port-forward 可省略（詳下方 Ingress 段）
 ```
 
 或核心（零領域包）與各領域包分開安裝——各包自帶 image／chart、可單獨升級替換：
 
 ```bash
-helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscore-chart   --version 1.1.0
+helm install cepheus-core   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syscore-chart   --version 1.1.1
 helm install pack-generic   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspackgeneric-chart --version 0.1.0
 ```
 
-> **釘版安裝（可重現）**：上列 `--version` 為 **v1.1.0** 班車釘定值。chart version 與內含平台版（appVersion）對照如下——umbrella 只需釘自身 `--version`，子 chart 版本由其相依鎖定：
+> **釘版安裝（可重現）**：上列 `--version` 為 **v1.1.1** 班車釘定值。chart version 與內含平台版（appVersion）對照如下——umbrella 只需釘自身 `--version`，子 chart 版本由其相依鎖定：
 >
 > | 安裝物 | chart | chart version | 內含平台版（appVersion） |
 > |---|---|---|---|
-> | 一鍵 umbrella | `solcepheus-chart` | `0.1.20` | `1.1.0` |
-> | 核心（零領域包） | `solcepheus-syscore-chart` | `1.1.0` | `1.1.0` |
+> | 一鍵 umbrella | `solcepheus-chart` | `0.1.21` | `1.1.1` |
+> | 核心（零領域包） | `solcepheus-syscore-chart` | `1.1.1` | `1.1.1` |
 > | 通用指管領域包 | `solcepheus-syspackgeneric-chart` | `0.1.0` | `0.1.0` |
 >
 > 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases) 說明。舊版資安／戰略綜管包 chart（`solcepheus-syspackcyber-chart`／`solcepheus-syspackstrategy-chart`）仍留存於 GHCR 供既有部署，惟不再隨本庫更新。
@@ -153,7 +153,7 @@ helm install pack-generic   oci://ghcr.io/twstellerwhale-ocean2/solcepheus-syspa
 已裝過本平台（如既有 `cepheus` release）要升到本版時，用 `helm upgrade`——同名 release 再跑 `helm install` 會直接報錯：
 
 ```bash
-helm upgrade cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.20 \
+helm upgrade cepheus oci://ghcr.io/twstellerwhale-ocean2/solcepheus-chart --version 0.1.21 \
   --set solcepheus-syscore-chart.ingress.baseDomain=你的網域   # 安裝時帶過的 --set 請全數重帶（查法見下）
 ```
 

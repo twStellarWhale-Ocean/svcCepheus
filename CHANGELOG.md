@@ -2,6 +2,14 @@
 
 本檔自 `VERSION` 投影；版號於 PR merge 當下釘選（feat→minor、fix→patch）。
 
+## 1.1.1 — 2026-07-30
+
+增量 #198（依賴安全升版＋相依授權豁免定案，fix）。
+
+- **`postcss`（HIGH）／`body-parser`（LOW）已升至修復版**：三處建置單元 `npm audit` 由 5 項降至 2 項。
+- **`react-router-dom` 6.30.4 → 7.18.2**：修掉**確實適用**之 open redirect（`<Link>`／`useNavigate` 反斜線，CVE-2025-68470 bypass）；6.x 線無修復版。v7 之 `v7_startTransition`／`v7_relativeSplatPath` 由 future flag 轉為預設行為，經回歸驗證無破——**原始碼零改動**（16 個引用點皆使用經典 API）。
+- **相依授權與漏洞豁免收斂為單一正本**（design ＜II.C.(B).1＞）：`react-leaflet` 之 `Hippocratic-2.1`（允許清單外）經裁定接受；`react-router` 其後兩則 RSC Mode CSRF advisory 判**不適用**——本方案為純 client SPA（`createRoot`，全庫無 SSR／RSC），不進 RSC mode。修該兩則須升 `react-router` v8，而 v8 peer 為 React ≥19.2.7、與 Shell 之 React 18 shared singleton 契約衝突，列後續增量。
+
 ## 1.1.0 — 2026-07-30
 
 增量 #182（右欄兩固定分頁改為功能說明／操作說明，feat）：右欄分工軸由「內容 vs 播放形式」改為**當頁 vs 全站**同軸對舉。
