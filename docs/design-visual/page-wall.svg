@@ -1,0 +1,57 @@
+<svg viewBox="0 0 1100 680" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',system-ui,'Noto Sans TC',sans-serif">
+  <rect width="1100" height="680" fill="#070c13"/>
+  <!-- kiosk top strip (no nav drawer) -->
+  <rect width="1100" height="56" fill="#0a1220"/><line x1="0" y1="56" x2="1100" y2="56" stroke="#1c3350"/>
+  <circle cx="30" cy="28" r="7" fill="#3d8bfd"/><text x="48" y="34" fill="#ffffff" font-size="19" font-weight="700">整體情態牆 · 全國指揮圖（COP）</text>
+  <text x="450" y="34" fill="#5f7793" font-size="12">唯讀投影 · /wall · 裝置 token · 自動重連</text>
+  <text x="930" y="26" fill="#9fb3cc" font-size="15" font-family="ui-monospace,monospace">2026-07-30　11:32:07</text>
+  <text x="1076" y="45" fill="#5f7793" font-size="11" text-anchor="end">投影單位：上級指揮中心 · ● 連線（WS）</text>
+
+  <!-- unit KPI row（單位態勢 · DomainReport.score 三級燈號＋形＋文） -->
+  <g>
+    <rect x="20" y="70" width="208" height="70" rx="9" fill="#08160d" stroke="#17492a"/><text x="38" y="100" fill="#3fb950" font-size="17" font-weight="700">北區應變單位</text><text x="38" y="124" fill="#5f8a6b" font-size="12">● 可用 86 · 收容 3 處開設</text><circle cx="206" cy="90" r="7" fill="#3fb950"/>
+    <rect x="238" y="70" width="208" height="70" rx="9" fill="#1a1405" stroke="#4a3d14"/><text x="256" y="100" fill="#d29922" font-size="17" font-weight="700">中區應變單位</text><text x="256" y="124" fill="#9a8752" font-size="12">▲ 注意 58 · 物資補進中</text><circle cx="424" cy="90" r="7" fill="#d29922"/>
+    <rect x="456" y="70" width="208" height="70" rx="9" fill="#1a0c0e" stroke="#5a2327"/><text x="474" y="100" fill="#f85149" font-size="17" font-weight="700">南區應變單位</text><text x="474" y="124" fill="#a86a6a" font-size="12">■ 危急 31 · 堤防溢流</text><circle cx="642" cy="90" r="7" fill="#f85149"/>
+    <rect x="674" y="70" width="208" height="70" rx="9" fill="#08160d" stroke="#17492a"/><text x="692" y="100" fill="#3fb950" font-size="17" font-weight="700">東區應變單位</text><text x="692" y="124" fill="#5f8a6b" font-size="12">● 可用 82</text><circle cx="860" cy="90" r="7" fill="#3fb950"/>
+    <rect x="892" y="70" width="188" height="70" rx="9" fill="#1a1405" stroke="#4a3d14"/><text x="910" y="100" fill="#d29922" font-size="17" font-weight="700">支援調度中心</text><text x="910" y="124" fill="#9a8752" font-size="12">▲ 注意 62</text><circle cx="1058" cy="90" r="7" fill="#d29922"/>
+  </g>
+
+  <!-- big map -->
+  <rect x="20" y="152" width="680" height="512" rx="10" fill="#0a121f" stroke="#1c3350"/>
+  <text x="40" y="180" fill="#9fb3cc" font-size="13" font-weight="600">全國管理單位態勢 · 台灣地圖 COP（單位 loc ＋ 上送燈號）</text>
+  <g transform="translate(300,190) scale(1.5)">
+    <path d="M96,8 C120,18 128,45 132,70 C140,110 150,140 150,175 C150,210 138,250 118,286 L108,293 C96,271 92,251 86,232 C78,205 70,180 66,150 C62,120 66,85 74,58 C80,38 86,20 96,8 Z" fill="#122236" stroke="#2f4d6e" stroke-width="1.3"/>
+  </g>
+  <g font-weight="700" font-size="11">
+    <circle cx="452" cy="220" r="9" fill="#3fb950" stroke="#070c13" stroke-width="2"/><text x="466" y="224" fill="#6f9a78">北區 ● 86</text>
+    <circle cx="432" cy="330" r="9" fill="#d29922" stroke="#070c13" stroke-width="2"/><text x="378" y="334" fill="#c9b06a" text-anchor="end">中區 ▲ 58</text>
+    <circle cx="452" cy="470" r="11" fill="#f85149" stroke="#070c13" stroke-width="2.4"/><circle cx="452" cy="470" r="19" fill="none" stroke="#f85149" stroke-width="1.6" opacity="0.5"/><text x="470" y="474" fill="#f8918c" font-size="12">南區 ■ 31</text>
+    <circle cx="536" cy="330" r="9" fill="#3fb950" stroke="#070c13" stroke-width="2"/><text x="550" y="334" fill="#6f9a78">東區 ● 82</text>
+    <circle cx="448" cy="400" r="9" fill="#d29922" stroke="#070c13" stroke-width="2"/><text x="394" y="404" fill="#c9b06a" text-anchor="end">支援 ▲ 62</text>
+    <line x1="452" y1="231" x2="452" y2="459" stroke="#f85149" stroke-width="2" stroke-dasharray="5 3" opacity="0.7"/>
+    <line x1="448" y1="409" x2="451" y2="458" stroke="#d29922" stroke-width="1.6" stroke-dasharray="4 2" opacity="0.7"/>
+    <text x="470" y="352" fill="#8b6a6a" font-size="10">上送連鎖（fromUnit→toUnit）</text>
+  </g>
+  <g font-size="11"><circle cx="46" cy="637" r="5" fill="#3fb950"/><text x="58" y="642" fill="#7f8ea0">● 可用 ≥70</text><circle cx="150" cy="637" r="5" fill="#d29922"/><text x="162" y="642" fill="#7f8ea0">▲ 注意 40–69</text><circle cx="268" cy="637" r="5" fill="#f85149"/><text x="280" y="642" fill="#7f8ea0">■ 危急 &lt;40</text><line x1="380" y1="637" x2="406" y2="637" stroke="#f85149" stroke-width="2" stroke-dasharray="4 2"/><text x="412" y="642" fill="#7f8ea0">跨單位連鎖</text><text x="520" y="642" fill="#5f7793">色＋形＋文三重編碼（WCAG 1.4.1）</text></g>
+
+  <!-- right column: 降級側欄＋最近上送 -->
+  <rect x="712" y="152" width="368" height="120" rx="10" fill="#0a121f" stroke="#1c3350"/>
+  <text x="732" y="180" fill="#9fb3cc" font-size="13" font-weight="600">無座標單位（降級側欄）</text>
+  <g font-size="12">
+    <rect x="728" y="192" width="164" height="28" rx="14" fill="#101820" stroke="#1c3350"/><circle cx="744" cy="206" r="5" fill="#3fb950"/><text x="756" y="210" fill="#cbd5df">後備支援隊 ● 78</text>
+    <rect x="900" y="192" width="164" height="28" rx="14" fill="#101820" stroke="#1c3350"/><circle cx="916" cy="206" r="5" fill="#d29922"/><text x="928" y="210" fill="#cbd5df">聯絡官小組 ▲ 55</text>
+  </g>
+  <text x="732" y="252" fill="#5f7793" font-size="10.5">單位無 loc 不上圖 · 列側欄（顯示單位名非 raw id）</text>
+
+  <rect x="712" y="284" width="368" height="380" rx="10" fill="#0a121f" stroke="#1c3350"/>
+  <text x="732" y="312" fill="#9fb3cc" font-size="13" font-weight="600">最近上送（DomainReport）</text><text x="1060" y="312" fill="#5f7793" font-size="10" text-anchor="end">即時廣播 ≤2s</text>
+  <g font-size="11.5">
+    <rect x="728" y="324" width="336" height="46" rx="6" fill="#1a0c0e" stroke="#2f181b"/><circle cx="742" cy="347" r="4" fill="#f85149"/><text x="756" y="343" fill="#e6edf3">南區應變單位 → 上級 · 31 ■</text><text x="756" y="360" fill="#7f8ea0" font-size="10">堤防溢流 · 撤離受阻 · 11:18</text>
+    <rect x="728" y="376" width="336" height="46" rx="6" fill="#1a1405" stroke="#4a3d14"/><circle cx="742" cy="399" r="4" fill="#d29922"/><text x="756" y="395" fill="#e6edf3">中區應變單位 → 上級 · 58 ▲</text><text x="756" y="412" fill="#7f8ea0" font-size="10">物資到位 55% · 11:02</text>
+    <rect x="728" y="428" width="336" height="46" rx="6" fill="#0d1a12" stroke="#173a25"/><circle cx="742" cy="451" r="4" fill="#3fb950"/><text x="756" y="447" fill="#cbd5df">北區應變單位 → 上級 · 86 ●</text><text x="756" y="464" fill="#7f8ea0" font-size="10">收容所 3 處開設完成 · 11:15</text>
+    <rect x="728" y="480" width="336" height="46" rx="6" fill="#111f16" stroke="#1e3a28"/><circle cx="742" cy="503" r="4" fill="#69a7ff"/><text x="756" y="499" fill="#cbd5df">上級核定 COA-A 增援南區</text><text x="756" y="516" fill="#7f8ea0" font-size="10">DecisionOrder 雙重輸出 · 10:15</text>
+    <rect x="728" y="532" width="336" height="46" rx="6" fill="#101820"/><circle cx="742" cy="555" r="4" fill="#8b98a6"/><text x="756" y="551" fill="#aeb9c4">東區應變單位 → 上級 · 82 ●</text><text x="756" y="568" fill="#7f8ea0" font-size="10">常態值勤 · 10:57</text>
+  </g>
+  <text x="732" y="600" fill="#5f7793" font-size="10">投影單位由維保於 [通用電視牆設定頁] 指定 · WebSocket 廣播 · 唯讀不可操作</text>
+  <text x="732" y="640" fill="#5f7793" font-size="10">cmpTechItem地圖 react-leaflet（TaiwanMap modWeb 副本）· 斷線輪詢 fallback · kiosk 全螢幕</text>
+</svg>

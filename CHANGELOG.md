@@ -1,6 +1,95 @@
 # Changelog
 
-本檔自 `VERSION` 投影；版號於 PR merge 當下釘選（feat→minor）。
+本檔自 `VERSION` 投影；版號於 PR merge 當下釘選（feat→minor、fix→patch）。
+
+## 1.1.0 — 2026-07-30
+
+增量 #182（右欄兩固定分頁改為功能說明／操作說明，feat）：右欄分工軸由「內容 vs 播放形式」改為**當頁 vs 全站**同軸對舉。
+
+- **[使用說明] → [功能說明]**：本頁 wi 由水平 chip 列（只顯碼）改**垂直列示、顯示碼與 wi 全名同列**；選定後列其步驟，點有錨步驟仍可單步 coach-mark 定位。
+- **[展示導覽] → [操作說明]**：由「wi 錨首段兩層樹」改**程序面全層樹**（域／orgSop／teamSop／prsnSop／wi），點任一 wi 直接導入其所屬頁、不隨頁切換；per-viewer 不可達者灰化為講解型。
+- **層級唯一正本改讀手冊 fragment `sop:` 欄**（manifest 新增 `sop` 欄位契約，前端只切分不推算）。舊制自 wi 錨首段倒推之路線已於 #183 刪三支函式，此為同源第四處、一併收斂。通用作業（`prsnSop#0.1`–`#0.7`）自成頂層節——其 `0` 與維保域之 `0` 僅編號空間相同、語意不同；缺層不補假節點，`sop:` 缺者掛「未分層」。
+- **自動播放全套除役**：播放列／速度／子樹連走／收合時 mini 播放列／跨路由續傳狀態機（`tour.ts` 整組退場，僅 `waitForElement` 收斂至 `locate.ts`）。`driver.js` 相依**保留**——其另一用途為 [功能說明] 單步定位。
+- **預期副作用（非退步）**：全層樹依 `sop:` 分層後，維保 wi（錨 `wi-3-*`、程序面實為 `orgSop#0.2`／`#0.3`）由原「系統維保」獨立節改掛域 0 之下；已立測試斷言固化，勿誤判為迴歸。
+- 連動：`prsnSop#0.6` 改「開啟操作說明」、`#0.7` 改「查看本頁功能說明」；說明中心鈕改「開啟操作說明」；未存變更守衛清單以「操作說明樹點擊導入」取代「展示導覽進入」並廢除換步不攔特例；`spec#10` 刪「可自動播放連走」；手冊 fragments／快速入門／擷取腳本／六張示意圖同步。
+
+**另修施工中發現之兩項既有缺陷**（非本增量造成；因擋住端對端測試而順修，詳見 #182 ＜III＞）：
+
+- **[通用演習控制頁] 載入情境後整頁崩潰**：`/api/exercise/load` 回傳之一次性憑證帶 `role`（情境宣告之 display 字串），前端型別卻誤宣告為繼承 `ExerciseAccountRow`（`roleIds: string[]`），render 時 `a.roleIds.join()` 對 undefined 取值 → React 卸載整棵子樹。兩個把關同時失效：JSON 回應為 cast（tsc 照不到）、`fakeApi` fixture 照著錯誤的前端型別捏造（單元測試永遠走不到該路徑）。已修正型別、改雙來源安全取值，並新增 `Exercise.test.tsx` 載入／重產成功路徑回歸測試（fixture 一律依後端實際回應）。
+- **左欄 L1 域按鈕未渲染 `domain#N` 顯示碼**：design ＜II.B.(B).3＞ 明訂三層皆帶顯示碼，實作只做了 L2／L3；驗它的端對端斷言長年被前一項崩潰擋在後面、從未真正執行，等於空掛。已補渲染並修正該斷言之讀取來源（L1 在 `cat-tabs`、L2／L3 在 `left-tree`）。
+- 另修三條隨 wi 編號改版而失效的端對端斷言：單步定位改自手冊 manifest 取步驟索引，並涵蓋「無錨／有錨但元素不在場／有錨且在場」三種結果。
+
+## 1.0.0 — 2026-07-29
+
+增量 #183（純核心平台＋官方通用指管領域包，feat!／breaking）：收斂為純核心＋單一官方通用指管包。
+
+- **移除官方領域包**：cyber／strategy／logistics 自本庫移除（產品收斂純核心；核心早已零領域包 #58）。
+- **核心系統改名**：`sysCepheus`→`sysCore`（資料夾、chart `solcepheus-syscore-chart`、image `solcepheus-syscore-modcore`／`-modweb`、全庫引用）。
+- **官方通用指管包**（`sysGenericC2`，發行 `syspackgeneric`／包 slug `generic`）：svc-kit 底座七法 compute（領域中性 rollup、整體取瓶頸非平均 spec#7）＋wui-kit WUI remote 四頁（態勢＝通用 COP）＋獨立 chart，接 umbrella（condition-gated、預設裝）。
+- **核心資料模型**：`OperationalCycle`（開立/封存 session）→ `Project`（專案·CRUD·單位自管·作業期間降為欄位）；pack 呼叫契約 `ctx.projectId`。
+- **權限項目（wi）改依畫面發放**（非依六步驟）：官方通用指管包補上域號（原缺→決策頁核定鈕恆關、專案面板不出現、頁面接不到手冊說明）；新增稽核查閱、授權變更核可、卸載核可等權限項目；維運 CLI 之數字碼除役、改以工作指導契約表達。
+- **專案功能補齊**：作業期間成為專案欄位（起訖時程）、可多筆並行、支援刪除（掛有目標者擋刪）；決策頁面板由「單一開立／封存」改為**專案清單**（新增可填時程、逐筆封存、刪除二次確認）。
+- **修**：前端專案 API 路徑錯誤（改名時漏改、所有請求恆 404，功能等同不存在）。
+- **升級搬移**：既有資料庫之 `operational_cycles`→`projects` 與相依欄位改名補上冪等搬移（此前僅改新建 schema，舊庫升級後既有專案與其下六步驟物件視同消失）；專案新欄位以 `ADD COLUMN IF NOT EXISTS` 補齊。
+- **示範與演習資料改領域中性**：唯一演習情境由資安主題改「上下級聯合演練」（原綁已移出之官方包、載入後跑成無殼）；示範單位／帳號／領域標籤去資安·戰略主題。
+- **使用手冊對齊產品收斂**：＜I 快速入門＞＜II 產品概述＞＜IV 附錄＞ 原仍整章描述已移出本庫的官方資安／戰略綜管兩包（「官方兩包」「資安操作台」「NIST CSF」「戰略＋戰術兩層」）並與已改寫的 ＜III＞ 正面矛盾（連平台維運的域號都兩套）；改寫為「純核心＋官方通用指管包、上下兩級同型」單一敘事，並加機判擋已除役敘事再度出貨。
+- **產品正式名定為「CEPHEUS 模組式管理平台」**：原顯示「CEPHEUS 災防管理系統」——災防已隨本增量退為**首要適用情境**、不再限定產品名（design 早已定名，程式與手冊未跟上）。此名見於登入頁、Top App Bar、說明中心、手冊封面與全部證據截圖。
+- **dev 反代補上官方包**：`vite.config.ts` 仍只反代已移除的 cyber／strategy，**沒有 generic 一條**——dev 下 `remoteEntry.js` 落入 SPA fallback（回 index.html、狀態仍是 200，用 curl 查狀態碼查不出來），域頁永遠退成通用 fallback；開發與證據截圖看到的都不是實際出貨的畫面。
+- **證據截圖全量重拍**：原 18 張全是改版前的產品（戰略決策頁、資安素材頁），且擷取腳本本身仍指著已移除的域與早已不存在的示範帳號——腳本壞著則截圖永遠修不回來。腳本改走 `/d/generic/*` 與現行帳號，決策頁定裝圖改以**指揮官**身分拍（核定鈕依 wi 閘控，參謀拍不到）。
+- **值勤交接**：決策頁新增交接面板（輪替時點交在途目標與未決方案、填註記，摘要寫入稽核鏈），依 `wi-1-3-6` 閘控。
+- **兩面正名**：流程面→**程序面**、操作面／功能面→**人機面**（`Sop`＝標準作業程序、`Hmi`＝人機介面）；骨幹顯示碼廢縮寫，一律用完整節點名（`orgSop#N`／`teamSop#N.M`／`prsnSop#N.M.K`／`domain#N`／`modHmi#N.M.K`）。本版把改名**落實到示意圖、使用手冊與程式**（前版僅設計文件與顯示碼實作到位）——含說明中心與左欄 tooltip 之詞彙對照（原仍在解釋畫面上已不存在的 `os-`／`fc-` 等碼）。
+- **掛載契約進位至 v2**：host 形狀二度變更（移除 `role` 改 `wis`／`canApprove`、新增 `projectId`）。此契約在碼中有四份副本且刻意不跨套件 import，`tsc` 抓不到單邊漂移，故新增 `testScripts/packContractLint.ps1` 機判版號與欄位集一致；素材頁 WUI 欄增「契約版本不符」態（此前版本不符只會靜默退通用頁、畫面無任何告警）。
+- **修**：官方包自述 manifest 與 dev 種子之 `contractVersion` 漏隨進位（→整包判不相容、域頁靜默退通用頁）；上送態勢分誤把 0–100 值再乘 100（→逾值域被靜默丟成 `null`、上級彙整恆 0）。
+- **breaking／升級注意**：核心 chart 更名（舊 `solcepheus-syscepheus-chart` 凍結於 GHCR、不再更新）；資料表 `operational_cycles`→`projects`（FK `cycle_id`→`project_id`）；umbrella 子 chart 由 cyber/strategy 改 generic；**領域包須同步升至掛載契約 v2**（v1 包將判不相容並降級為通用頁）；**態勢分值域統一為 0–100**——舊官方包（已移出本庫）之 evaluator 約定為 0–1，既有部署升級後那批歷史研判紀錄會顯示為「整體 0/100」（僅影響歷史顯示，不影響新資料與追溯鏈）。
+
+## 0.32.0 — 2026-07-22
+
+增量 #140（SOP 顯示碼深化，feat）：#128 顯示碼三項打磨。
+
+- **單 wi 頁顯碼**：使用說明分頁於單 wi 頁（多數頁）標題旁顯一枚不可點 wi 顯示碼 token（原僅多 wi 頁出 chip 選擇列）。
+- **tooltip 統一**：左欄 funcCat／funcPage 顯示碼 token 由原生 `title` 屬性改 MUI `Tooltip`（原生 `title` 觸控裝置不出、鍵盤不可及）。
+- **fallback label**：`tourTree` 無包環境 section fallback label 由舊全名格式 `orgSop#N` 改中性字（`領域 N`），不與新 `os-N` 顯示碼混示同列。
+
+純前端呈現；design 既有「顯示碼」契約（token tooltip／使用說明 chip）已涵蓋，無 design 變更。附帶修正 #139 遺留之 `HomeRedirect.test` getMe 型別（缺 `visibleUnits`；vitest esbuild 不型檢、`tsc` build 才顯）。
+
+## 0.31.1 — 2026-07-22
+
+增量 #139（認證授權 UX 收尾，fix）：v0.26.0 發車評審點名之認證授權缺口。
+
+- **① 越權被拒留稽核**：`requireWi`（device／缺 wi 兩路）與 auth 中介 device 白名單越界三處 403 原未稽核（`README`／design 之「越權留稽核」未兌現）——三處皆 best-effort `appendAudit({action:"denied", method, path, reason, need})`（稽核失敗不改變 403；`denied` 既排除 WS 廣播）。
+- **② 未知路由不掉登入頁**：catch-all `*` 原一律導 `/login`（已登入者 token 未失效卻見登入表單）——改用 `HomeRedirect`（已登入→角色首頁、未登入→`/login`）。
+- **③ 他域頁籤過濾（判定已被取代、不作抵觸性硬過濾）**：funcDomain 可見性本即 **wi 驅動**（硬規則③、design ＜III.B.(A)＞），#163 內建 lead/member **刻意跨域零鎖死**、域專屬細分由**維保自訂角色**達成（後續）；`領域服務` chip 已由 `DomainPageHost` 依路由域解析。硬 `unitDomain` 過濾將違反硬規則③故不採（決策留痕於 #139／#168）。
+
+## 0.31.0 — 2026-07-22
+
+增量 #151（可編輯表單未存變更離開守衛，feat）：管理網站常規缺項——`docs/design.md` 與 `modWeb` 皆無未存守衛（0 命中）。
+
+- 新增共用 `components/UnsavedGuard`：`UnsavedGuardProvider`（layout route）＋`useUnsavedGuard(dirty)`＋`useGuardedNav`＋單一確認框。dirty 時 ①`beforeunload` 攔關分頁／重整；②殼層 `Layout` 導覽（左欄選單／帳號／說明／登出）改走 `guardedNav`，開「捨棄未儲存的變更？」〔捨棄並離開／留在本頁〕，捨棄才放行、留下停原頁。
+- 套用：電視牆設定頁（標題）、帳號資訊頁（變更密碼欄）、單元編組頁（未送出之新增單位／座標／隸屬邊輸入——react-flow 為衍生視圖、即時提交、無待存拓樸緩衝）、決策頁（新目標草稿）。
+- `design.md` ＜III.C.(C)＞ 新增「未存變更離開守衛（全操作台通用）」規格。**MVP 界定**：瀏覽器上一頁／下一頁（popstate，需遷 react-router 資料路由＋`useBlocker`）與 401 強制導出不攔、列後續增量。純前端、未遷路由架構（不動 `main.tsx`／測試 `renderUtil`）。
+
+## 0.30.1 — 2026-07-22
+
+增量 #150（指揮管制最低能力三缺口收斂，fix）：[sysTechType指管] 最低能力清單三缺口逐項明落點，杜絕「留白」與「過度擴張」並存之含混。
+
+- **態勢可存取性（gap#3，已修）**：態勢嚴重度改**色＋形＋文三重編碼**——除三級燈號色外並帶形狀（`●` 可用／`▲` 注意／`■` 危急）與文字標籤，**不以顏色為唯一資訊管道**（WCAG 2.1 §1.4.1 Use of Color〔Level A〕，紅綠色覺障礙者與投影牆／小螢幕皆可區分嚴重度）；集中定義於 modWeb `components/severity.ts`（`statusColor`／`statusSymbol`／`statusLabel` 同一分界），套用台灣地圖標記常駐 tooltip 與圖例、情態牆無座標單位 chip。
+- **圖層面板（gap#3）／告警受理狀態機（gap#1）／時間軸回放（gap#2）**：明列**後續增量**並記錄 MVP 範圍界定與理由——固定圖層已達「無地圖不算 COP」最低能力、分級呈現與跨域告警可視（情資頁 DataGrid＋情態牆燈號）已具、`SituationSnapshot` 不可覆寫之追溯鏈已具回放資料基礎；獨立告警受理佇列（acknowledge／assign／close＋wi）、多圖層可視控制、時點查詢（`GET /api/snapshots?at=`）與 COP 回放 UI 屬增益、非最低能力門檻。design ＜III.B.(A)＞ 補「指管最低能力落點與 MVP 範圍界定」、＜III.C.(A)＞ 燈號規格補三重編碼。
+
+## 0.30.0 — 2026-07-22
+
+增量 #153（決策/態勢頁承接證據與信心，feat）：spec#3「評量分數可空、須附證據/信心/解釋」原有契約與 `EvaluationResult` 欄位，但決策頁評量跑了不顯示、態勢頁無信心/證據——退回「工單狀態機而非決策支援」。新增共用 `EvaluationResultPanel`（分數可空/等級/信心％/證據來源可展開逐項摘要/解釋/版本·時間）；genericPages 決策頁評量後即呈現、可檢視各目標評量結果，態勢頁研判列補信心％與證據來源快照。design ＜III.C.(C)＞ 決策/態勢頁版型欄補評量結果面板規格。純前端呈現＋設計，複用既有端點與型。
+
+## 0.29.0 — 2026-07-22
+
+增量 #152（作業期間生命週期歸屬，feat）：`OperationalCycle`（`/api/cycles`）有核心物件與端點卻無角色/頁/wi 承接開立/封存——正線起點只能靠演習載入或直呼 API。補齊歸屬：各域決策頁新增值勤 wi `wi-{N}-3-2`（開立/封存作業期間），`POST`/`PATCH /api/cycles` 由 `requireWi` 閘控（值勤動作——組員/組長/維保超管持有；`GET` 依可視範圍不變），內建角色 role_wi 對齊；modWeb 決策頁宿主新增作業期間面板（開立/封存，`useCan` 依 wi 元件層閘控）。演習載入建 cycle 之路徑不動。design.md ＜III.B.(A)/III.C.(C)＞ 補歸屬與頁表 wi。
+
+## 0.28.0 — 2026-07-21
+
+增量 #163（RBAC 權限模型，feat；流程面增量之核心）：把 3-role enum（adm/lead/member）硬切換為以 wi 為最小單位之 RBAC——prsnSop＝角色群組、wi＝權限項目、帳號指派至角色，funcPage 可見性與元件閘控皆由有效 wi 集算出，無角色名硬編（硬規則③）。新增 roles/role_wi/user_roles 三表（與 grants 可視單位正交）、/api/roles CRUD 與帳號角色指派端點、帳號授權頁之角色管理 UI。**硬切換遷移**：drop users.role，以 IF EXISTS 守衛之冪等區塊把現有 adm/lead/member 對映到通用內建角色（維保超管/指管組長/指管組員；跨域、零鎖死、免 binding 解析）後才 drop 欄，未對映即中止。JWT 不再帶 role、角色變更即時生效。包 WUI 核可鈕改依 canApprove（持本域核可 wi）而非 role。經子代理安全審查修掉「維保全看塌掉／開機掛掉／越權配 wi」等關鍵缺陷。wi 依權限粒度細切留後續。
+
+## 0.27.0 — 2026-07-20
+
+增量 #148（左欄導覽改操作面三層，feat）：導覽不再由 SOP 三層機械衍生，改為**操作面**自有三層——funcDomain（頂列圖示按鈕）／funcCat（功能列類別條目）／funcPage（功能列具體頁）；流程面（orgSopDomain／orgSop／teamSop／prsnSop／wi）移至右欄說明與 RBAC，兩面**交會於 wi**、各自維護不互相衍生。關係基數定案：funcPage↔wi 一對多且一 wi 只屬一 funcPage（wi 編號改依 funcPage 發放）、prsnSop↔wi 多對多。顯示碼左欄改 fd/fc/fp（自導覽樹位置產生，不再由 wi 錨倒推）、流程面 os/ts/ps 改僅現於右欄；**wi 錨字串一律不動**（語意由位置碼降為穩定 ID），對外手冊 deep link 零遷移。同批收斂原 L0 cat 與 L1 section 之 1:1 冗餘層，並補做 formatVersion 3.1→3.5 之技術選型四層遷移（techApp→sysTechType／techStack→modTechStack／techItem→cmpTechItem，contract-common 副本同步正本）。RBAC 權限模型、督核核可 wi 與 wi 依權限粒度重切歸後續「流程面」增量，design 已明文標示分界。
 
 ## 0.26.0 — 2026-07-18
 

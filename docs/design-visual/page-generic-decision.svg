@@ -1,0 +1,125 @@
+<svg viewBox="0 0 1100 680" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',system-ui,'Noto Sans TC',sans-serif">
+  <rect width="1100" height="680" fill="#0b1119"/>
+  <!-- Top bar -->
+  <rect width="1100" height="46" fill="#070b11"/><line x1="0" y1="46" x2="1100" y2="46" stroke="#1c2836"/>
+  <g fill="#7f8ea0"><rect x="16" y="17" width="14" height="2.3"/><rect x="16" y="22" width="14" height="2.3"/><rect x="16" y="27" width="14" height="2.3"/></g>
+  <text x="44" y="29" fill="#e6edf3" font-size="16" font-weight="600">CEPHEUS 模組式管理平台 — 通用指管決策頁</text>
+  <g font-size="11.5"><rect x="452" y="13" width="168" height="20" rx="10" fill="#101c2c" stroke="#2a5a8c"/><text x="466" y="27" fill="#69a7ff" font-weight="600">值勤中 · CY-0730（開立/封存於頁內值勤面板）</text>
+  
+  <rect x="740" y="13" width="88" height="20" rx="10" fill="#2a2210" stroke="#5a4a1c"/><text x="753" y="27" fill="#d29922" font-weight="600">待核 2 件</text></g>
+  <text x="946" y="29" fill="#8b98a6" font-size="12.5" font-family="ui-monospace,monospace">10:02:45</text>
+  <circle cx="1010" cy="23" r="4" fill="#3fb950"/><text x="1020" y="27" fill="#7f8ea0" font-size="11.5">連線</text>
+  <text x="1084" y="29" fill="#93a1b0" font-size="11.5" text-anchor="end">指管指揮官</text>
+
+  <!-- Left nav -->
+  <rect x="0" y="46" width="184" height="634" fill="#0e1723"/><line x1="184" y1="46" x2="184" y2="680" stroke="#1c2836"/>
+  <rect x="10" y="54" width="78" height="26" rx="6" fill="#15304a" stroke="#2a5a8c"/><text x="49" y="72" fill="#69a7ff" font-size="12" text-anchor="middle">🧭</text>
+  <rect x="96" y="54" width="78" height="26" rx="6" fill="#0d1622" stroke="#1e2a38"/><text x="135" y="72" fill="#8b98a6" font-size="12" text-anchor="middle">🛠</text>
+  <text x="14" y="98" fill="#69a7ff" font-size="11" font-weight="700">🧭 通用指管</text><text x="176" y="98" fill="#5f6d7c" font-size="8.5" text-anchor="end">domain#1</text>
+  <text x="16" y="114" fill="#8b98a6" font-size="9.5">📁 彙整情資（O）</text><text x="176" y="114" fill="#5f6d7c" font-size="8.5" text-anchor="end">teamSop#1.1</text>
+  <text x="24" y="132" fill="#cbd5df" font-size="10">📄 通用指管情資頁</text><text x="176" y="132" fill="#5f6d7c" font-size="8.5" text-anchor="end">modHmi#1.1.1</text>
+  <text x="16" y="150" fill="#8b98a6" font-size="9.5">📁 研判態勢（O）</text><text x="176" y="150" fill="#5f6d7c" font-size="8.5" text-anchor="end">teamSop#1.2</text>
+  <text x="24" y="164" fill="#cbd5df" font-size="10">📄 通用指管態勢頁</text><text x="176" y="164" fill="#5f6d7c" font-size="8.5" text-anchor="end">modHmi#1.2.1</text>
+  <text x="16" y="182" fill="#8b98a6" font-size="9.5">📁 訂定目標·核定（D）</text><text x="176" y="182" fill="#5f6d7c" font-size="8.5" text-anchor="end">teamSop#1.3</text>
+  <rect x="12" y="186" width="164" height="17" rx="4" fill="#15304a"/><text x="24" y="198" fill="#69a7ff" font-size="10" font-weight="700">📄 通用指管決策頁</text><text x="176" y="198" fill="#5f6d7c" font-size="8.5" text-anchor="end">modHmi#1.3.1</text>
+  <text x="16" y="216" fill="#8b98a6" font-size="9.5">📁 執行管制（A）</text><text x="176" y="216" fill="#5f6d7c" font-size="8.5" text-anchor="end">teamSop#1.4</text>
+  <text x="24" y="230" fill="#cbd5df" font-size="10">📄 通用指管管辦頁</text><text x="176" y="230" fill="#5f6d7c" font-size="8.5" text-anchor="end">modHmi#1.4.1</text>
+  <line x1="14" y1="244" x2="170" y2="244" stroke="#182432"/>
+  <text x="18" y="266" fill="#5f6d7c" font-size="10.5" font-weight="700" letter-spacing="1.5">本頁 wi（RBAC 元件閘控）</text>
+  <g font-size="10" fill="#7f8ea0">
+    <text x="24" y="288">wi-1.3.1 訂定目標</text>
+    <text x="24" y="306">wi-1.3.2 值勤（開立/封存）</text>
+    <text x="24" y="324">wi-1.3.3 研擬方案</text>
+    <text x="24" y="342">wi-1.3.4 擬核定交辦</text>
+    <text x="24" y="360" fill="#d29922">wi-1.3.5 裁決核可（組長）</text>
+  </g>
+
+  <!-- Main -->
+  <rect x="196" y="56" width="560" height="616" rx="10" fill="#111a26" stroke="#22303f"/>
+  <text x="216" y="72" fill="#5f6d7c" font-size="10">首頁 › 通用指管 › 通用指管決策頁</text>
+  <text x="216" y="84" fill="#e6edf3" font-size="14.5" font-weight="600">目標 · 方案 · 核定（Objective / COA / DecisionOrder）</text>
+  <!-- Tabs -->
+  <g font-size="12">
+    <rect x="216" y="98" width="100" height="28" rx="6" fill="#15304a" stroke="#2a5a8c"/><text x="266" y="117" fill="#69a7ff" text-anchor="middle" font-weight="700">本級目標</text>
+    <rect x="322" y="98" width="100" height="28" rx="6" fill="#0d1622" stroke="#1e2a38"/><text x="372" y="117" fill="#8b98a6" text-anchor="middle">行動方案</text>
+    <rect x="428" y="98" width="100" height="28" rx="6" fill="#0d1622" stroke="#1e2a38"/><text x="478" y="117" fill="#8b98a6" text-anchor="middle">核定交辦</text>
+    <rect x="628" y="98" width="112" height="28" rx="14" fill="#1d3a5f"/><text x="684" y="117" fill="#9ecbff" text-anchor="middle" font-weight="600">＋ 新增目標</text>
+  </g>
+  <!-- Objective list -->
+  <g font-size="11.5">
+    <g><rect x="212" y="140" width="528" height="52" rx="8" fill="#231016" stroke="#5a2130"/>
+      <text x="228" y="162" fill="#ffffff" font-weight="700">OBJ-114 南區防汛整備達標</text><text x="700" y="162" fill="#f85149" text-anchor="end" font-weight="700">31 ■</text>
+      <text x="228" y="180" fill="#c98" font-size="10.5">承接上級 OBJ-100 · owner 本級 · 分解 3 子目標 · 評量 09:41（選中）</text></g>
+    <g><rect x="212" y="198" width="528" height="52" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+      <text x="228" y="220" fill="#cbd5df" font-weight="600">OBJ-115 中區物資整備補齊</text><text x="700" y="220" fill="#d29922" text-anchor="end" font-weight="700">58 ▲</text>
+      <text x="228" y="238" fill="#5f6d7c" font-size="10.5">本級開立 · 交辦中區應變單位 · 依賴 OBJ-116</text></g>
+    <g><rect x="212" y="256" width="528" height="52" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+      <text x="228" y="278" fill="#cbd5df" font-weight="600">OBJ-116 支援機具調度就位</text><text x="700" y="278" fill="#3fb950" text-anchor="end" font-weight="700">78 ●</text>
+      <text x="228" y="296" fill="#5f6d7c" font-size="10.5">本級 Task 執行（TaskAssignment ×2）· 貢獻 OBJ-114</text></g>
+  </g>
+  <!-- 評量結果面板 -->
+  <rect x="212" y="322" width="528" height="120" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+  <text x="228" y="344" fill="#93a1b0" font-size="12" font-weight="600">評量結果 · OBJ-114（spec#3 證據與信心）</text>
+  <g font-size="11.5">
+    <text x="228" y="368" fill="#7f8ea0">分數</text><text x="268" y="368" fill="#f85149" font-weight="800" font-size="15">31</text><text x="296" y="368" fill="#f85149">■ 危急</text>
+    <text x="368" y="368" fill="#7f8ea0">等級</text><text x="404" y="368" fill="#e6edf3">落後</text>
+    <text x="452" y="368" fill="#7f8ea0">信心</text><text x="488" y="368" fill="#e6edf3">中</text>
+    <text x="536" y="368" fill="#7f8ea0">版本</text><text x="572" y="368" fill="#e6edf3">v3 · 09:41</text>
+    <text x="228" y="392" fill="#69a7ff">▸ 證據：快照 SNP-0730-09 · 南區上送 31 · 情資 3 筆</text>
+    <text x="228" y="412" fill="#cbd5df">解釋：任務執行分項 24 為主因；評量策略＝加權彙整（可空分改人工）</text>
+    <text x="228" y="432" fill="#5f6d7c" font-size="10">分數可空（質性評量仍存證據與信心）· 修訂建新版本、不可覆寫</text>
+  </g>
+  <!-- 核定交辦區 -->
+  <rect x="212" y="458" width="528" height="118" rx="8" fill="#101c2c" stroke="#2a5a8c"/>
+  <text x="228" y="480" fill="#69a7ff" font-size="12" font-weight="700">擬核定 · 決策雙重輸出（DecisionOrder）</text>
+  <g font-size="11.5" fill="#cbd5df">
+    <text x="228" y="502">◉ 交辦下級 → Child Objective「南區增援抽水」→ 南區應變單位</text>
+    <text x="228" y="522">○ 本級執行 → Task＋TaskAssignment（支援調度中心）</text>
+  </g>
+  <g font-size="11.5">
+    <rect x="228" y="534" width="104" height="26" rx="13" fill="#1d3a5f"/><text x="280" y="551" fill="#9ecbff" text-anchor="middle" font-weight="600">送組長裁決</text>
+    <rect x="340" y="534" width="128" height="26" rx="13" fill="#173a25" stroke="#2a5c3c"/><text x="404" y="551" fill="#5fd38a" text-anchor="middle" font-weight="700">✓ 裁決核可（組長）</text>
+    <text x="480" y="551" fill="#5f6d7c" font-size="10">useCan(wi-1.3.5)：無核可權者本鈕隱藏</text>
+  </g>
+  <text x="228" y="600" fill="#93a1b0" font-size="12" font-weight="600">已核定（不可覆寫 · 修訂建新版本）</text>
+  <g font-size="10.5" font-family="ui-monospace,monospace" fill="#7f8ea0">
+    <rect x="212" y="610" width="252" height="24" rx="5" fill="#0d1622" stroke="#1e2a38"/><text x="222" y="626">DO-0730-02 ✓ 09:12 · 交辦中區</text>
+    <rect x="472" y="610" width="252" height="24" rx="5" fill="#0d1622" stroke="#1e2a38"/><text x="482" y="626">DO-0730-01 ✓ 06:10 · 本級任務</text>
+  </g>
+  <text x="216" y="660" fill="#5f6d7c" font-size="10">核存 Objective／ActionPlan／DecisionOrder · 同型 Objective 不複製（spec#2）· 追溯鏈 spec#4</text>
+
+  <!-- Right pane -->
+  <rect x="768" y="56" width="312" height="300" rx="10" fill="#111a26" stroke="#22303f"/>
+  <text x="788" y="84" fill="#ffffff" font-size="15" font-weight="700">OBJ-114 多視角</text>
+  <text x="788" y="104" fill="#7f8ea0" font-size="11">同一 Objective · 視角由單位推導（不複製）</text>
+  <g font-size="11.5">
+    <rect x="784" y="118" width="280" height="56" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+    <text x="798" y="138" fill="#93a1b0" font-weight="600">received（承接視角）</text>
+    <text x="798" y="156" fill="#cbd5df" font-size="10.5">issuer 上級單位 → receiver 本級 · 期限 07/31</text>
+    <rect x="784" y="182" width="280" height="56" rx="8" fill="#15304a" stroke="#2a5a8c"/>
+    <text x="798" y="202" fill="#69a7ff" font-weight="600">managed（本級管理視角 · 現在）</text>
+    <text x="798" y="220" fill="#cbd5df" font-size="10.5">owner 本級 · 分解 decomposesTo ×3</text>
+    <rect x="784" y="246" width="280" height="56" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+    <text x="798" y="266" fill="#93a1b0" font-weight="600">delegated（交辦視角）</text>
+    <text x="798" y="284" fill="#cbd5df" font-size="10.5">→ 南區應變單位（Child OBJ-114.1 擬發）</text>
+  </g>
+  <text x="788" y="336" fill="#5f6d7c" font-size="10.5">關係：decomposesTo · dependsOn(OBJ-116) · gates</text>
+
+  <rect x="768" y="368" width="312" height="304" rx="10" fill="#111a26" stroke="#22303f"/>
+  <text x="788" y="396" fill="#e6edf3" font-size="14.5" font-weight="600">行動方案（COA）評比</text><text x="1060" y="396" fill="#5f6d7c" font-size="10" text-anchor="end">包 evaluateCoa 產出</text>
+  <g font-size="11.5">
+    <rect x="784" y="410" width="280" height="64" rx="8" fill="#15304a" stroke="#2a5a8c"/>
+    <text x="798" y="430" fill="#69a7ff" font-weight="700">COA-A 增援南區（推薦）</text><text x="1050" y="430" fill="#3fb950" text-anchor="end" font-weight="700">82</text>
+    <text x="798" y="448" fill="#cbd5df" font-size="10.5">抽水機 ×4＋人力 ×20 · 6h 到位</text>
+    <text x="798" y="464" fill="#5f6d7c" font-size="10">風險：中區支援量能下降（可承受）</text>
+    <rect x="784" y="482" width="280" height="64" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+    <text x="798" y="502" fill="#cbd5df" font-weight="600">COA-B 跨區調度重分配</text><text x="1050" y="502" fill="#d29922" text-anchor="end" font-weight="700">61</text>
+    <text x="798" y="520" fill="#cbd5df" font-size="10.5">全區重排 · 12h 到位</text>
+    <text x="798" y="536" fill="#5f6d7c" font-size="10">風險：多單位同時變更、協調成本高</text>
+    <rect x="784" y="554" width="280" height="64" rx="8" fill="#0d1622" stroke="#1e2a38"/>
+    <text x="798" y="574" fill="#cbd5df" font-weight="600">COA-C 維持現配置觀察</text><text x="1050" y="574" fill="#f85149" text-anchor="end" font-weight="700">28</text>
+    <text x="798" y="592" fill="#cbd5df" font-size="10.5">不調度 · 續觀 2h</text>
+    <text x="798" y="608" fill="#5f6d7c" font-size="10">風險：南區持續惡化、錯過處置窗口</text>
+  </g>
+  <text x="788" y="648" fill="#5f6d7c" font-size="10">方案評比供決策支援 · 核定仍由人員裁決（AI 分級原則）</text>
+</svg>
