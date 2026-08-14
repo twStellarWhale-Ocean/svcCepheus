@@ -2,6 +2,8 @@
 
 本檔自 `VERSION` 投影；版號於 PR merge 當下釘選（feat→minor、fix→patch）。
 
+> **📣 更名告示（2026-08）**：GitHub 組織已更名 `twStellerWhale-Ocean2` → `twStellarWhale-Ocean`。repo 網址自動轉址，但 **GHCR 不轉址**——下文歷史紀錄中的 `ghcr.io/twstellerwhale-ocean2/…` 已失效，請一律改用 `ghcr.io/twstellarwhale-ocean/…`（其後路徑與版本 tag 不變；歷史版本 image／chart 皆已在新位址可拉）。
+
 ## 1.1.1 — 2026-07-30
 
 增量 #198（依賴安全升版＋相依授權豁免定案，fix）。
