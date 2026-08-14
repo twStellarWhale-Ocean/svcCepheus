@@ -131,7 +131,7 @@ helm install pack-generic   oci://ghcr.io/twstellarwhale-ocean/solcepheus-syspac
 > | 核心（零領域包） | `solcepheus-syscore-chart` | `1.1.1` | `1.1.1` |
 > | 通用指管領域包 | `solcepheus-syspackgeneric-chart` | `0.1.0` | `0.1.0` |
 >
-> 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twMoonBear-Laboratory/solCepheus/releases) 說明。舊版資安／戰略綜管包 chart（`solcepheus-syspackcyber-chart`／`solcepheus-syspackstrategy-chart`）仍留存於 GHCR 供既有部署，惟不再隨本庫更新。
+> 各版 chart version 與 appVersion 的完整對照見該版 [GitHub Release](https://github.com/twStellarWhale-Ocean/svcCepheus/releases) 說明。舊版資安／戰略綜管包 chart（`solcepheus-syspackcyber-chart`／`solcepheus-syspackstrategy-chart`）仍留存於 GHCR 供既有部署，惟不再隨本庫更新。
 
 裝好後確認：modCore `/healthz` 回 200、modWeb 首頁可載入、素材頁可見官方通用指管包「可達／**已登記未套用**」；有啟用 Ingress 者另跑 `kubectl get ingress modweb` 確認 `CLASS` 欄**不是** `<none>`（`<none>`＝孤兒 Ingress、對外網址會無聲 404，請回頭跑上方環境檢查）。
 
