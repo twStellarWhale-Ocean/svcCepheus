@@ -47,33 +47,43 @@ helm version                           # Helm 3 以上
 
 ## B. 正式部署
 
-兩個 chart、各自獨立 release（包之增替卸不改核心）：
+**核心一支、主題包四支，各自獨立 release**——包之增替卸不動核心。**沒有母 chart**（一鍵全套之母 chart 已於 2.1.0 廢除）。
 
-**快速路（建議）——母 chart 一鍵全套**（核心＋通用指管主題包同一 release，介接自動接妥）：
+映像置於私有 GHCR，故先於部署 namespace 建立拉取憑證：
 
 ```bash
-helm install cepheus solcepheus-chart-2.0.0.tgz \
-  --set solcepheus-syscore-chart.admin.initialPassword='<自訂初始密碼>' \
-  --set solcepheus-syscore-chart.postgres.password='<自訂資料庫密碼>'
+kubectl create secret docker-registry ghcr-pull -n <namespace> \
+  --docker-server=ghcr.io --docker-username=<GitHub 帳號> --docker-password=<個人存取權杖>
 ```
 
-**分離路——核心與主題包各自獨立 release**（包之增替卸不動核心；**包須指明核心端點**，release 名不同時介接不會自動成立）：
+**① 核心**（含資料庫；`admin` 初始密碼於此設定）：
 
 ```bash
-helm install cepheus-core solcepheus-syscore-chart-2.0.0.tgz \
+helm install cepheus solcepheus-syscore-chart-3.0.1.tgz -n <namespace> \
+  --set imagePullSecrets[0].name=ghcr-pull \
   --set admin.initialPassword='<自訂初始密碼>' \
-  --set postgres.enabled=true --set postgres.password='<自訂資料庫密碼>'
-
-helm install cepheus-pack-generic solcepheus-syspackgeneric-chart-2.0.0.tgz \
-  --set core.url=http://cepheus-core-core:8080   # <核心 release 名>-core:8080
+  --set postgres.enabled=true --set postgres.password='<自訂資料庫密碼>' \
+  --set service.type=NodePort
 ```
+
+**② 四個主題包**——**`core.url` 為必填**：包與核心是不同 release，服務名推不得，未給值 `helm install` 會當場報錯（這是刻意的，免得裝出一個連不到核心的包）：
+
+```bash
+CORE=http://cepheus-core:8080          # ＝<核心 release 名>-core:8080
+for c in sysopr systrans sysstationleaf sysfleetleaf; do
+  helm install cepheus-$c solcepheus-$c-chart-3.0.1.tgz -n <namespace> \
+    --set imagePullSecrets[0].name=ghcr-pull --set core.url=$CORE
+done
+```
+
+裝完核心會自動掃描 namespace 發現四個包，於「主題包掛載頁」可見。
 
 （chart 檔自[產品發布頁](https://github.com/twStellarWhale-Ocean/svcCepheus/releases)下載；映像自動取自 GHCR。）
 
 ## C. 帳號密碼
 
 * 初始管理帳號 `admin` 於首次部署建立，密碼＝安裝時 `admin.initialPassword` 所設之值；首登強制換密（未換密前僅能執行換密）。
-* 其他帳號由維運於「帳號授權頁」建立並指派權限群組；建立時可自訂初始密碼，留空＝預設 `ChangeMe-2.0.0`，新成員首登同樣強制換密。
+* 其他帳號由維運於「帳號授權頁」建立；**權限＝單位×角色**——先在指揮樹上建單位並套用主題，該主題宣告的角色（組長／副組長／情報官／管制官／聯絡官／執行員／駕駛）即可在該單位上指派給人。建立帳號時可自訂初始密碼，留空＝系統產生一次性密碼並顯示一次，新成員首登同樣強制換密。
 
 ## D. 系統設定
 
@@ -124,7 +134,7 @@ helm install cepheus-pack-generic solcepheus-syspackgeneric-chart-2.0.0.tgz \
 
 # IV. 備註紀錄
 
-* **版本與改版**：現行 `2.0.0`（重作首班）；沿革見 [GitHub Release](https://github.com/twStellarWhale-Ocean/svcCepheus/releases)。
+* **版本與改版**：現行 `3.0.1`；沿革見 [GitHub Release](https://github.com/twStellarWhale-Ocean/svcCepheus/releases)。
 * **授權與 OSS 清單**：隨 build 掃描產出（程式落地後接入）。
 * **使用限制**：本版終端支援桌電／筆電瀏覽器，不含手機；單位間互動限平台內單位；與平台外組織之往來，由平台內人員代為登錄。
 * **問題回報**：[產品首頁](https://github.com/twStellarWhale-Ocean/svcCepheus)｜[問題回報頁](https://github.com/twStellarWhale-Ocean/svcCepheus/issues)。
