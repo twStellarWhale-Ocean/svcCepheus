@@ -49,18 +49,12 @@ helm version                           # Helm 3 以上
 
 **核心一支、主題包四支，各自獨立 release**——包之增替卸不動核心。**沒有母 chart**（一鍵全套之母 chart 已於 2.1.0 廢除）。
 
-映像置於私有 GHCR，故先於部署 namespace 建立拉取憑證：
-
-```bash
-kubectl create secret docker-registry ghcr-pull -n <namespace> \
-  --docker-server=ghcr.io --docker-username=<GitHub 帳號> --docker-password=<個人存取權杖>
-```
+映像與 chart 皆為公開 GHCR 套件（自 3.0.5 起），不需拉取憑證。
 
 **① 核心**（含資料庫；`admin` 初始密碼於此設定）：
 
 ```bash
-helm install cepheus solcepheus-syscore-chart-3.0.1.tgz -n <namespace> \
-  --set imagePullSecrets[0].name=ghcr-pull \
+helm install cepheus solcepheus-syscore-chart-3.0.5.tgz -n <namespace> \
   --set admin.initialPassword='<自訂初始密碼>' \
   --set postgres.enabled=true --set postgres.password='<自訂資料庫密碼>' \
   --set service.type=NodePort
@@ -71,8 +65,8 @@ helm install cepheus solcepheus-syscore-chart-3.0.1.tgz -n <namespace> \
 ```bash
 CORE=http://cepheus-core:8080          # ＝<核心 release 名>-core:8080
 for c in sysopr systrans sysstationleaf sysfleetleaf; do
-  helm install cepheus-$c solcepheus-$c-chart-3.0.1.tgz -n <namespace> \
-    --set imagePullSecrets[0].name=ghcr-pull --set core.url=$CORE
+  helm install cepheus-$c solcepheus-$c-chart-3.0.5.tgz -n <namespace> \
+    --set core.url=$CORE
 done
 ```
 
@@ -134,7 +128,7 @@ done
 
 # IV. 備註紀錄
 
-* **版本與改版**：現行 `3.0.1`；沿革見 [GitHub Release](https://github.com/twStellarWhale-Ocean/svcCepheus/releases)。
+* **版本與改版**：現行 `3.0.5`；沿革見 [GitHub Release](https://github.com/twStellarWhale-Ocean/svcCepheus/releases)。
 * **授權與 OSS 清單**：隨 build 掃描產出（程式落地後接入）。
 * **使用限制**：本版終端支援桌電／筆電瀏覽器，不含手機；單位間互動限平台內單位；與平台外組織之往來，由平台內人員代為登錄。
 * **問題回報**：[產品首頁](https://github.com/twStellarWhale-Ocean/svcCepheus)｜[問題回報頁](https://github.com/twStellarWhale-Ocean/svcCepheus/issues)。
